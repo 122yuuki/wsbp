@@ -1,43 +1,42 @@
 package com.example.wsbp.page;
 
+import com.example.wsbp.MySession;
+import com.example.wsbp.page.signed.SignedPage;
+import com.giffing.wicket.spring.boot.context.scan.WicketSignInPage;
 import org.apache.wicket.markup.html.WebPage;
-import org.wicketstuff.annotation.mount.MountPath;
-import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import com.example.wsbp.service.IUserService;
 import org.apache.wicket.validation.validator.StringValidator;
+import org.wicketstuff.annotation.mount.MountPath;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+import com.example.wsbp.service.IChatService;
 
-@MountPath("UserMaker")
-public class UserMakerPage extends WebPage{
-
+@MountPath("ChatIn")
+public class ChatPage extends WebPage {
     @SpringBean
-    private IUserService userService;
-    public UserMakerPage() {
+    private IChatService chatService;
+
+    public ChatPage(){
         var userNameModel = Model.of("");
-        var userPassModel = Model.of("");
+        var msgBodyModel = Model.of("");
 
-        var toHomeLink = new BookmarkablePageLink<>("toHome", HomePage.class);
-        add(toHomeLink);
-
-        var userInfoForm = new Form<>("userInfo"){
+        var chatInfoForm = new Form<>("chatInfo"){
             @Override
             protected void onSubmit() {
                 var userName = userNameModel.getObject();
-                var userPass = userPassModel.getObject();
+                var msgBody = msgBodyModel.getObject();
                 var msg = "送信データ："
                         + userName
                         + ","
-                        + userPass;
+                        + msgBody;
                 System.out.println(msg);
-                userService.registerUser(userName, userPass);
-                setResponsePage(new UserMakerCompPage(userNameModel));
+                chatService.registerUser(userName,msgBody);
+                setResponsePage(new ChatCompPage(userNameModel));
             }
         };
-        add(userInfoForm);
+        add(chatInfoForm);
 
         var userNameField = new TextField<>("userName",userNameModel){
             @Override
@@ -48,17 +47,20 @@ public class UserMakerPage extends WebPage{
                 add(validator);
             }
         };
-        userInfoForm.add(userNameField);
+        chatInfoForm.add(userNameField);
 
-        var userPassField = new PasswordTextField("userPass",userPassModel){
+        var msgBodyField = new TextField<>("msgBody",msgBodyModel){
             @Override
             protected void onInitialize() {
                 super.onInitialize();
                 // 文字列の長さを8〜32文字に制限するバリデータ
-                var validator = StringValidator.lengthBetween(8, 32);
+                var validator = StringValidator.lengthBetween(1, 200);
                 add(validator);
             }
         };
-        userInfoForm.add(userPassField);
+        chatInfoForm.add(msgBodyField);
+
     }
+
+
 }

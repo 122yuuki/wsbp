@@ -1,7 +1,9 @@
 package com.example.wsbp.page.signed;
 
+import com.example.wsbp.page.UserMakerPage;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.annotation.mount.MountPath;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
@@ -14,7 +16,8 @@ import com.example.wsbp.data.AuthUser;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import com.example.wsbp.service.IUserService;
-
+import com.example.wsbp.page.ChatPage;
+import com.example.wsbp.page.ChatViewPage;
 
 @AuthorizeInstantiation(Roles.USER)
 @MountPath("Signed")
@@ -56,6 +59,12 @@ public class SignedPage extends WebPage{
             }
         };
         add(usersLV);
+
+        var toChatInLink = new BookmarkablePageLink<>("chatIn", ChatPage.class);
+        add(toChatInLink);
+
+        var toChatViewLink = new BookmarkablePageLink<>("chatView", ChatViewPage.class);
+        add(toChatViewLink);
     }
 
 }

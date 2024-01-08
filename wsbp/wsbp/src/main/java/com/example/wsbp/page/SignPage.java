@@ -46,7 +46,6 @@ public class SignPage extends WebPage{
                 add(StringValidator.lengthBetween(8, 32));
             }
         };
-
         userInfoForm.add(userNameField);
 
         var userPassField = new PasswordTextField("userPass", userPassModel) {
